@@ -1,0 +1,33 @@
+{
+  "name": "edaj",
+  "version": "0.0.1",
+  "description": "A Jade precompiler to accompany client-side MVCs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chronize/edaj"
+  },
+  "keywords": [
+    "jade",
+    "edaj",
+    "mvc",
+    "precompile",
+    "compile",
+    "template",
+    "express",
+    "client"
+  ],
+  "author": "synchronous",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chronize/edaj/issues"
+  },
+  "homepage": "https://github.com/chronize/edaj",
+  "dependencies": {
+    "async": "^0.9.0",
+    "jade": "^1.7.0"
+  }
+}
