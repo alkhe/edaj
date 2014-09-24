@@ -3,64 +3,72 @@ var fs = require('fs'),
 	async = require('async'),
 	jade = require('jade');
 
-module.exports = function(source, destination) {
+module.exports = function(options) {
+    var source = options.source || './public/tpl',
+        destination = options.destination || path.join(source, 'templates.js'),
+        namespace = 'Templates' || options.namespace,
+        write = function(templates, next) {
+            var stream = fs.createWriteStream(destination);
+            async.map(templates, function(tpl, next) {
+                fs.readFile(path.join(source, tpl), {
+                    encoding: 'utf-8'
+                }, next);
+            }, function(err, data) {
+                stream.write('var ' + namespace + " = {" + pack(templates.splice(0, 1), data.splice(0, 1)));
+                for (var i = 0; i < templates.length; i++) {
+                    stream.write(',' + pack(templates[i], data[i]));
+                }
+                next(err);
+            });
+        },
+        pack = function(tpl, data) {
+            return path.basename(tpl, '.jade') + ': ' + jade.compileClient(data);
+        };
+
 	return function(req, res, next) {
-        async.parallel({
-            templates: function(next) {
-                fs.readdir(source, next);
-            },
-            compiled: function(next) {
-                fs.readdir(destination, next);
-            }
-        }, function(err, data) {
-            async.each(data.templates, function(tpl, next) {
-                if (path.extname(tpl) === '.jade') {
-                    var newfile = path.basename(tpl, '.jade') + '.js';
-                    if (data.compiled.indexOf(newfile) > -1) {
-                        async.parallel({
-                            source: function(next) {
-                                fs.stat(path.join(source, tpl), next);
-                            },
-                            destination: function(next) {
-                                fs.stat(path.join(destination, newfile), next);
-                            }
-                        }, function(err, data) {
-                            if (data.source.mtime.getTime() != data.destination.mtime.getTime()) {
-                                async.waterfall([
-                                    function(next) {
-                                        fs.readFile(path.join(source, tpl), next);
-                                    },
-                                    function(data, next) {
-                                        fs.writeFile(path.join(destination, newfile), jade.compileClient(data), next);
-                                    },
-                                    function(next) {
-                                        fs.utimes(path.join(source, tpl), new Date, new Date(), next);
-                                    }
-                                ], next);
-                            }
-                            else {
-                                next();
-                            }
+        async.waterfall([
+            function(next) {
+                async.parallel({
+                    templates: function(next) {
+                        fs.readdir(source, next);
+                    },
+                    compiled: function(next) {
+                        fs.exists(destination, function(exists) {
+                            next(null, exists);
                         });
                     }
-                    else {
+                }, next);
+            },
+            function(data, next) {
+                async.filter(data.templates, function(file, next) {
+                    next(path.extname(file) === '.jade');
+                }, function(templates) {
+                    if (data.compiled) {
                         async.waterfall([
                             function(next) {
-                                fs.readFile(path.join(source, tpl), next);
+                                fs.stat(destination, next);
                             },
-                            function(data, next) {
-                                fs.writeFile(path.join(destination, newfile), jade.compileClient(data), next);
-                            },
-                            function(next) {
-                                fs.utimes(path.join(source, tpl), new Date, new Date(), next);
+                            function(stat, next) {
+                                async.detect(templates, function(tpl, next) {
+                                    fs.stat(path.join(source, tpl), function(err, stat) {
+                                        next(stat.mtime.getTime != stat.mtime.getTime());
+                                    });
+                                }, function(lag) {
+                                    if (lag) {
+                                        write(templates, next);
+                                    }
+                                    else {
+                                        next();
+                                    }
+                                });
                             }
                         ], next);
                     }
-                }
-                else {
-                    next();
-                }
-            }, next);
-        });
-    }
+                    else {
+                        write(templates, next);
+                    }
+                });
+            }
+        ], next);
+    };
 }
