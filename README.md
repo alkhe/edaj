@@ -26,9 +26,9 @@ app.use(edaj(options));
 ```
 
 ###Options
-- `source` Location of the Jade templates. ['./public/tpl']
-- `destination` Location of the compiled template script. ['./public/tpl/templates.js']
-- `namespace` Namespace in which templates can be accessed. ['Templates']
+- `source` Location of the Jade templates. [`'./public/tpl'`]
+- `destination` Location of the compiled template script. [`'./public/tpl/templates.js'`]
+- `namespace` Namespace in which templates can be accessed. [`'Templates'`]
 
 ###Client
 
