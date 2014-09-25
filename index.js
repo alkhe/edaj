@@ -16,10 +16,12 @@ module.exports = function(options) {
                 }, next);
             }, function(err, data) {
                 stream.write('var ' + namespace + " = {" + pack(templates[0], data[0]));
+				fs.utimes(path.join(source, templates[0]), new Date, new Date, function() {});
                 for (var i = 1; i < templates.length; i++) {
                     stream.write(',' + pack(templates[i], data[i]));
+					fs.utimes(path.join(source, templates[i]), new Date, new Date, function() {});
                 }
-				stream.write('};');
+				stream.end('};');
                 next(err);
             });
         },
