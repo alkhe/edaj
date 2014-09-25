@@ -66,12 +66,12 @@ html, body
 
 .blog
 	display inline-block
-	background #4080c0
 	width 500px
-	color #c0e0f0
-	margin 20px
 	padding 10px
+	margin 20px
 	border-radius 2px
+	background #4080c0
+	color #c0e0f0
 
 	.title
 		font-size 40px
@@ -86,11 +86,10 @@ html, body
 		padding 5px
 		background #70a0d0
 
-
 hr
 	border 0
 	height 1px
-	background #333
+	background #ccc
 	background-image -webkit-linear-gradient(left, #48c, #ccc, #48c)
 	background-image -moz-linear-gradient(left, #48c, #ccc, #48c)
 	background-image -ms-linear-gradient(left, #48c, #ccc, #48c)
