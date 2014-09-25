@@ -52,8 +52,8 @@ module.exports = function(options) {
                             },
                             function(stat, next) {
                                 async.detect(templates, function(tpl, next) {
-                                    fs.stat(path.join(source, tpl), function(err, stat) {
-                                        next(stat.mtime.getTime() != stat.mtime.getTime());
+                                    fs.stat(path.join(source, tpl), function(err, tplstat) {
+                                        next(tplstat.mtime.getTime() != stat.mtime.getTime());
                                     });
                                 }, function(lag) {
                                     if (lag) {
