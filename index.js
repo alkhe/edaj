@@ -4,9 +4,9 @@ var fs = require('fs'),
 	jade = require('jade');
 
 module.exports = function(options) {
-    var source = options.source || './public/tpl',
-        destination = options.destination || path.join(source, 'templates.js'),
-        namespace = 'Templates' || options.namespace,
+    var source = (options && options.source) || './public/tpl',
+        destination = (options && options.destination) || path.join(source, 'templates.js'),
+        namespace = (options && options.namespace) || Templates,
 		jext = '.jade',
         write = function(templates, next) {
             var stream = fs.createWriteStream(destination);
