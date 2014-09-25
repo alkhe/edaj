@@ -7,6 +7,7 @@ module.exports = function(options) {
     var source = options.source || './public/tpl',
         destination = options.destination || path.join(source, 'templates.js'),
         namespace = 'Templates' || options.namespace,
+		jext = '.jade',
         write = function(templates, next) {
             var stream = fs.createWriteStream(destination);
             async.map(templates, function(tpl, next) {
@@ -14,15 +15,16 @@ module.exports = function(options) {
                     encoding: 'utf-8'
                 }, next);
             }, function(err, data) {
-                stream.write('var ' + namespace + " = {" + pack(templates.splice(0, 1), data.splice(0, 1)));
-                for (var i = 0; i < templates.length; i++) {
+                stream.write('var ' + namespace + " = {" + pack(templates[0], data[0]));
+                for (var i = 1; i < templates.length; i++) {
                     stream.write(',' + pack(templates[i], data[i]));
                 }
+				stream.write('};');
                 next(err);
             });
         },
         pack = function(tpl, data) {
-            return path.basename(tpl, '.jade') + ': ' + jade.compileClient(data);
+            return path.basename(tpl, jext) + ': ' + jade.compileClient(data);
         };
 
 	return function(req, res, next) {
@@ -41,7 +43,7 @@ module.exports = function(options) {
             },
             function(data, next) {
                 async.filter(data.templates, function(file, next) {
-                    next(path.extname(file) === '.jade');
+                    next(path.extname(file) === jext);
                 }, function(templates) {
                     if (data.compiled) {
                         async.waterfall([
