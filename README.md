@@ -36,9 +36,11 @@ app.use(edaj(options));
 
 ```
 script(src='/tpl/templates.js')
+// ...
+#content
 ```
 
-`JS`
+`Javascript`
 
 ```
 var content = $('#content');
