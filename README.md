@@ -20,8 +20,7 @@ app.use(edaj(options));
 .blog
 	.title= title
 	.content= content
-	button.respond Respond
-	.fb-like
+	button.respond Comment
 ```
 
 ###Options
