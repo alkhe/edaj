@@ -35,6 +35,7 @@ app.use(edaj(options));
 `Jade`
 
 ```
+script(src='/js/runtime.js') // Jade runtime
 script(src='/tpl/templates.js')
 // ...
 #content
