@@ -1,6 +1,6 @@
 {
   "name": "edaj",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "A Jade precompiler to accompany client-side MVCs.",
   "main": "index.js",
   "scripts": {
