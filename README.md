@@ -1,5 +1,9 @@
 #edaj
 
+[![npm version](https://img.shields.io/npm/v/edaj.svg?style=flat-square)](https://npmjs.org/package/edaj)
+[![downloads](http://img.shields.io/npm/dm/edaj.svg?style=flat-square)](https://npmjs.org/package/edaj)
+[![license](http://img.shields.io/npm/l/edaj.svg?style=flat-square)](https://npmjs.org/package/edaj)
+
 `edaj` is a Jade precompiler middleware for Express to automatically compile Jade templates into Javascript functions for use on the client. `edaj` recompiles template scripts when any of the dependent templates change.
 
 ##Installation
